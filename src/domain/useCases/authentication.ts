@@ -1,7 +1,7 @@
 import { AccountModel } from "../models/account-models";
 
-type AuthenticationParams = {
-  emai: string;
+export type AuthenticationParams = {
+  email: string;
   password: string;
 };
 export interface Authentication {
