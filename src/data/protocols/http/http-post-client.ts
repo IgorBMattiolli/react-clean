@@ -2,7 +2,7 @@ import { HttpResponse } from ".";
 
 export type HttpPostParams<T> = {
   url: string;
-  body: T;
+  body?: T;
 };
 
 //T - tipo do body da requisição
