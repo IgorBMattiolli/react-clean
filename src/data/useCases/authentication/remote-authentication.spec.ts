@@ -1,6 +1,6 @@
 import { RemoteAuthentication } from "./remote-authentication";
 import { HttpPostClientSpy } from "@/data/test";
-import { InvalidCredentialsError } from "@/domain/errors";
+import { InvalidCredentialsError, UnexpedctedError } from "@/domain/errors";
 import { HTTP_STATUS_CODE } from "@/data/protocols/http";
 import { AccountModel } from "@/domain/models";
 import { AuthenticationParams } from "@/domain/useCases";
@@ -53,7 +53,7 @@ describe("RemoteAuthentication", () => {
       statusCode: HTTP_STATUS_CODE.BAD_REQUEST,
     };
     const promise = sut.auth(mockAuthentication());
-    expect(promise).rejects.toThrow(new InvalidCredentialsError());
+    expect(promise).rejects.toThrow(new UnexpedctedError());
   });
 
   test("Should throw UnexpedctedError if HttpPostClient return 500", async () => {
@@ -62,7 +62,7 @@ describe("RemoteAuthentication", () => {
       statusCode: HTTP_STATUS_CODE.SERVER_ERROR,
     };
     const promise = sut.auth(mockAuthentication());
-    expect(promise).rejects.toThrow(new InvalidCredentialsError());
+    expect(promise).rejects.toThrow(new UnexpedctedError());
   });
 
   test("Should throw UnexpedctedError if HttpPostClient return 404", async () => {
@@ -71,7 +71,7 @@ describe("RemoteAuthentication", () => {
       statusCode: HTTP_STATUS_CODE.NOT_FOUND,
     };
     const promise = sut.auth(mockAuthentication());
-    expect(promise).rejects.toThrow(new InvalidCredentialsError());
+    expect(promise).rejects.toThrow(new UnexpedctedError());
   });
 
   test("Should return an AccountModel if HttpPostClient return 200", async () => {
