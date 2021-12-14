@@ -1,11 +1,9 @@
 import {
   HttpPostClient,
   HttpPostParams,
-} from "@/data/protocols/http/http-post-client";
-import {
   HttpResponse,
   HTTP_STATUS_CODE,
-} from "@/data/protocols/http/http-response";
+} from "@/data/protocols/http";
 
 export class HttpPostClientSpy<T, R> implements HttpPostClient<T, R> {
   url?: string;
