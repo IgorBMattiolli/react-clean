@@ -1,16 +1,17 @@
 import { InvalidCredentialsError } from "./../../../domain/errors/invalid-credentails-error";
 import { AuthenticationParams } from "@/domain/useCases/authentication";
-import { HttpPostClientSpy } from "@/data/test/mock-http-client";
-import {
-  HttpResponse,
-  HTTP_STATUS_CODE,
-} from "@/data/protocols/http/http-response";
+import { HTTP_STATUS_CODE } from "@/data/protocols/http/http-response";
 import { UnexpedctedError } from "@/domain/errors/unexpected-error";
+import { AccountModel } from "@/domain/models/account-models";
+import { HttpPostClient } from "@/data/protocols/http/http-post-client";
 
 export class RemoteAuthentication {
   constructor(
     private readonly url: string,
-    private readonly httpPostClient: HttpPostClientSpy
+    private readonly httpPostClient: HttpPostClient<
+      AuthenticationParams,
+      AccountModel
+    >
   ) {}
 
   async auth(params: AuthenticationParams): Promise<void> {

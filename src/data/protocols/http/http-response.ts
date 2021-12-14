@@ -6,7 +6,7 @@ export enum HTTP_STATUS_CODE {
   NOT_FOUND = 404,
   SERVER_ERROR = 401,
 }
-export type HttpResponse = {
+export type HttpResponse<T> = {
   statusCode: HTTP_STATUS_CODE;
-  body?: any;
+  body?: T;
 };
