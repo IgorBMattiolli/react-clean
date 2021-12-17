@@ -1,5 +1,6 @@
 const path = require("path");
-const { CleanWebpackPlugin } = reuqire("clean-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+
 module.exports = {
   mode: "development",
   entry: "./src/main/index.tsx",
@@ -30,7 +31,7 @@ module.exports = {
           {
             loader: "css-loader",
             options: {
-              module: true,
+              modules: true,
             },
           },
           {
@@ -41,11 +42,15 @@ module.exports = {
     ],
   },
   devServer: {
-    contentBase: "./public",
-    writeToDisk: true,
+    devMiddleware: {
+      writeToDisk: true,
+    },
+    static: {
+      directory: "./public",
+    },
     historyApiFallback: true,
   },
-  external: {
+  externals: {
     react: "React",
     "react-dom": "ReactDOM",
   },
