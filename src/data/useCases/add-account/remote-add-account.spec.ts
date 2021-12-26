@@ -1,50 +1,52 @@
-import { RemoteAuthentication } from "./remote-authentication";
-import { HttpPostClientSpy } from "@/data/test";
-import { InvalidCredentialsError, UnexpedctedError } from "@/domain/errors";
 import { HTTP_STATUS_CODE } from "@/data/protocols/http";
+import { HttpPostClientSpy } from "@/data/test";
+import { UnexpedctedError } from "@/domain/errors";
+import { EmailInUseError } from "@/domain/errors/email-in-use-error";
 import { AccountModel } from "@/domain/models";
-import { AuthenticationParams } from "@/domain/useCases";
-import { mockAccountModel, mockAuthentication } from "@/domain/test";
+import { mockAccountModel, mockAddAccount } from "@/domain/test";
+import { AddAccountParams } from "@/domain/useCases";
 import faker from "faker";
+import { RemoteAddAccount } from "./remote-add-account";
 
 type SutTypes = {
-  sut: RemoteAuthentication;
-  httpPostClientSpy: HttpPostClientSpy<AuthenticationParams, AccountModel>;
+  sut: RemoteAddAccount;
+  httpPostClientSpy: HttpPostClientSpy<AddAccountParams, AccountModel>;
 };
 
 const makeSut = (url: string = faker.internet.url()): SutTypes => {
   const httpPostClientSpy = new HttpPostClientSpy<
-    AuthenticationParams,
+    AddAccountParams,
     AccountModel
   >();
-  const sut = new RemoteAuthentication(url, httpPostClientSpy);
+  const sut = new RemoteAddAccount(url, httpPostClientSpy);
   return {
     sut,
     httpPostClientSpy,
   };
 };
-describe("RemoteAuthentication", () => {
+
+describe("RemoteAddAccount", () => {
   test("Should call HttpPostClient with correct URL", async () => {
     const url = faker.internet.url();
     const { sut, httpPostClientSpy } = makeSut(url);
-    await sut.auth(mockAuthentication());
+    await sut.add(mockAddAccount());
     expect(httpPostClientSpy.url).toBe(url);
   });
 
   test("Should call HttpPostClient with correct body", async () => {
     const { sut, httpPostClientSpy } = makeSut();
-    const authenticationParams = mockAuthentication();
-    await sut.auth(authenticationParams);
-    expect(httpPostClientSpy.body).toEqual(authenticationParams);
+    const addAccountParams = mockAddAccount();
+    await sut.add(addAccountParams);
+    expect(httpPostClientSpy.body).toEqual(addAccountParams);
   });
 
-  test("Should throw InvalidCredentialError if HttpPostClient return 401", async () => {
+  test("Should throw EmailInUseError if HttpPostClient return 403", async () => {
     const { sut, httpPostClientSpy } = makeSut();
     httpPostClientSpy.response = {
-      statusCode: HTTP_STATUS_CODE.UNAUTHORIZED,
+      statusCode: HTTP_STATUS_CODE.FORBIDDEN,
     };
-    await expect(sut.auth(mockAuthentication())).rejects.toBeInstanceOf(
-      InvalidCredentialsError
+    await expect(sut.add(mockAddAccount())).rejects.toBeInstanceOf(
+      EmailInUseError
     );
   });
 
@@ -53,7 +55,7 @@ describe("RemoteAuthentication", () => {
     httpPostClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.BAD_REQUEST,
     };
-    await expect(sut.auth(mockAuthentication())).rejects.toBeInstanceOf(
+    await expect(sut.add(mockAddAccount())).rejects.toBeInstanceOf(
       UnexpedctedError
     );
   });
@@ -63,7 +65,7 @@ describe("RemoteAuthentication", () => {
     httpPostClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.SERVER_ERROR,
     };
-    await expect(sut.auth(mockAuthentication())).rejects.toBeInstanceOf(
+    await expect(sut.add(mockAddAccount())).rejects.toBeInstanceOf(
       UnexpedctedError
     );
   });
@@ -73,7 +75,7 @@ describe("RemoteAuthentication", () => {
     httpPostClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.NOT_FOUND,
     };
-    await expect(sut.auth(mockAuthentication())).rejects.toBeInstanceOf(
+    await expect(sut.add(mockAddAccount())).rejects.toBeInstanceOf(
       UnexpedctedError
     );
   });
@@ -85,7 +87,7 @@ describe("RemoteAuthentication", () => {
       statusCode: HTTP_STATUS_CODE.OK,
       body: httpResult,
     };
-    const account = await sut.auth(mockAuthentication());
+    const account = await sut.add(mockAddAccount());
     expect(account).toEqual(httpResult);
   });
 });

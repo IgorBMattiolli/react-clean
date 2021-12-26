@@ -8,22 +8,27 @@ import {
 import Styles from "./login-styles.scss";
 import Context from "@/presentation/contexts/form/form-context";
 import { Validation } from "@/presentation/protocols/validation";
-import { Authentication } from "@/domain/useCases";
+import { Authentication, SaveAccessToken } from "@/domain/useCases";
 import { Link, useHistory } from "react-router-dom";
 
 type Props = {
   validation: Validation;
   authentication: Authentication;
+  saveAccessToken: SaveAccessToken;
 };
 
-const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
+const Login: React.FC<Props> = ({
+  validation,
+  authentication,
+  saveAccessToken,
+}: Props) => {
   const history = useHistory();
   const [state, setState] = useState({
     isLoading: false,
     email: "",
     password: "",
     emailError: "",
-    passwordError: "Campo obrigatório",
+    passwordError: "",
     mainError: "",
   });
 
@@ -48,7 +53,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
         email: state.email,
         password: state.password,
       });
-      localStorage.setItem("accessToken", account.accessToken);
+      await saveAccessToken.save(account.accessToken);
       history.replace("/");
     } catch (error) {
       setState({
@@ -68,7 +73,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
           onSubmit={handleSubmit}
         >
           <h2>Login</h2>
-          <Input type="email" name="email" placeholder="Digite sue e-mail" />
+          <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input
             type="password"
             name="password"
