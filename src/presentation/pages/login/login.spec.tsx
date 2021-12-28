@@ -61,20 +61,6 @@ const simulateValidSubmit = async (
   await waitFor(() => form);
 };
 
-const testElementExists = (sut: RenderResult, fieldName: string): void => {
-  const element = sut.getByTestId(fieldName);
-  expect(element).toBeTruthy();
-};
-
-const testElementText = (
-  sut: RenderResult,
-  fieldName: string,
-  text: string
-): void => {
-  const element = sut.getByTestId(fieldName);
-  expect(element.textContent).toBe(text);
-};
-
 describe("Login Component", () => {
   afterEach(cleanup);
 
@@ -83,7 +69,6 @@ describe("Login Component", () => {
     const { sut } = makeSut({
       validationError,
     });
-
     Helper.testChildCount(sut, "error-wrap", 0);
     Helper.testButtonIsDisabled(sut, "submit", true);
     Helper.testStatusForField(sut, "email", validationError);
@@ -130,7 +115,7 @@ describe("Login Component", () => {
   test("Should show spinner on submit", async () => {
     const { sut } = makeSut();
     await simulateValidSubmit(sut);
-    testElementExists(sut, "spinner");
+    Helper.testElementExists(sut, "spinner");
   });
 
   test("Should call Authentication with correct values", async () => {
@@ -167,7 +152,7 @@ describe("Login Component", () => {
       .spyOn(authenticationSpy, "auth")
       .mockReturnValue(Promise.reject(error));
     await simulateValidSubmit(sut);
-    testElementText(sut, "main-error", error.message);
+    Helper.testElementText(sut, "main-error", error.message);
     Helper.testChildCount(sut, "error-wrap", 1);
   });
 
@@ -179,7 +164,7 @@ describe("Login Component", () => {
       .mockReturnValue(Promise.reject(error));
     await simulateValidSubmit(sut);
     const errorWrap = sut.getByTestId("error-wrap");
-    testElementText(sut, "main-error", error.message);
+    Helper.testElementText(sut, "main-error", error.message);
     expect(errorWrap.childElementCount).toBe(1);
   });
 
@@ -200,13 +185,13 @@ describe("Login Component", () => {
       .spyOn(saveAccessTokenMock, "save")
       .mockReturnValue(Promise.reject(error));
     await simulateValidSubmit(sut);
-    testElementText(sut, "main-error", error.message);
+    Helper.testElementText(sut, "main-error", error.message);
     Helper.testChildCount(sut, "error-wrap", 1);
   });
 
   test("Should go to signup page", async () => {
     const { sut } = makeSut();
-    const register = sut.getByTestId("signup");
+    const register = sut.getByTestId("signup-link");
     fireEvent.click(register);
     expect(history.length).toBe(2);
     expect(history.location.pathname).toBe("/signup");
