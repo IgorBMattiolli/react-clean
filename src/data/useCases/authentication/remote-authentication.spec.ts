@@ -43,8 +43,9 @@ describe("RemoteAuthentication", () => {
     httpPostClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.UNAUTHORIZED,
     };
-    const promise = sut.auth(mockAuthentication());
-    expect(promise).rejects.toThrow(new InvalidCredentialsError());
+    await expect(sut.auth(mockAuthentication())).rejects.toBeInstanceOf(
+      InvalidCredentialsError
+    );
   });
 
   test("Should throw UnexpedctedError if HttpPostClient return 400", async () => {
@@ -52,8 +53,9 @@ describe("RemoteAuthentication", () => {
     httpPostClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.BAD_REQUEST,
     };
-    const promise = sut.auth(mockAuthentication());
-    expect(promise).rejects.toThrow(new UnexpedctedError());
+    await expect(sut.auth(mockAuthentication())).rejects.toBeInstanceOf(
+      UnexpedctedError
+    );
   });
 
   test("Should throw UnexpedctedError if HttpPostClient return 500", async () => {
@@ -61,8 +63,9 @@ describe("RemoteAuthentication", () => {
     httpPostClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.SERVER_ERROR,
     };
-    const promise = sut.auth(mockAuthentication());
-    expect(promise).rejects.toThrow(new UnexpedctedError());
+    await expect(sut.auth(mockAuthentication())).rejects.toBeInstanceOf(
+      UnexpedctedError
+    );
   });
 
   test("Should throw UnexpedctedError if HttpPostClient return 404", async () => {
@@ -70,8 +73,9 @@ describe("RemoteAuthentication", () => {
     httpPostClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.NOT_FOUND,
     };
-    const promise = sut.auth(mockAuthentication());
-    expect(promise).rejects.toThrow(new UnexpedctedError());
+    await expect(sut.auth(mockAuthentication())).rejects.toBeInstanceOf(
+      UnexpedctedError
+    );
   });
 
   test("Should return an AccountModel if HttpPostClient return 200", async () => {

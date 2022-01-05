@@ -8,18 +8,25 @@ import {
 import Styles from "./login-styles.scss";
 import Context from "@/presentation/contexts/form/form-context";
 import { Validation } from "@/presentation/protocols/validation";
-import { Authentication } from "@/domain/useCases";
+import { Authentication, SaveAccessToken } from "@/domain/useCases";
 import { Link, useHistory } from "react-router-dom";
+import SubmitButton from "@/presentation/components/submit-button/submit-button";
 
 type Props = {
   validation: Validation;
   authentication: Authentication;
+  saveAccessToken: SaveAccessToken;
 };
 
-const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
+const Login: React.FC<Props> = ({
+  validation,
+  authentication,
+  saveAccessToken,
+}: Props) => {
   const history = useHistory();
   const [state, setState] = useState({
     isLoading: false,
+    isFomInvalid: true,
     email: "",
     password: "",
     emailError: "",
@@ -28,10 +35,15 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
   });
 
   useEffect(() => {
+    const { email, password } = state;
+    const formData = { email, password };
+    const emailError = validation.validate("email", formData);
+    const passwordError = validation.validate("password", formData);
     setState({
       ...state,
-      emailError: validation.validate("email", state.email),
-      passwordError: validation.validate("password", state.password),
+      emailError,
+      passwordError,
+      isFomInvalid: !!emailError || !!passwordError,
     });
   }, [state.email, state.password]);
 
@@ -40,7 +52,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
   ): Promise<void> => {
     event.preventDefault();
     try {
-      if (state.isLoading || state.emailError || state.passwordError) {
+      if (state.isLoading || state.isFomInvalid) {
         return;
       }
       setState({ ...state, isLoading: true });
@@ -48,7 +60,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
         email: state.email,
         password: state.password,
       });
-      localStorage.setItem("accessToken", account.accessToken);
+      await saveAccessToken.save(account.accessToken);
       history.replace("/");
     } catch (error) {
       setState({
@@ -58,6 +70,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
       });
     }
   };
+
   return (
     <div className={Styles.login}>
       <LoginHeader />
@@ -68,21 +81,14 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
           onSubmit={handleSubmit}
         >
           <h2>Login</h2>
-          <Input type="email" name="email" placeholder="Digite sue e-mail" />
+          <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input
             type="password"
             name="password"
             placeholder="Digite sua senha"
           />
-          <button
-            data-testid="submit"
-            disabled={!!state.emailError || !!state.passwordError}
-            type="submit"
-            className={Styles.submit}
-          >
-            Entrar
-          </button>
-          <Link data-testid="signup" to="/signup" className={Styles.link}>
+          <SubmitButton label="Entrar" />
+          <Link data-testid="signup-link" to="/signup" className={Styles.link}>
             Criar conta
           </Link>
           <FormStatus />
