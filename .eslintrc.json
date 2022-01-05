@@ -4,17 +4,11 @@
       "version": "detect"
     }
   },
-  "extends": [
-    "standard-with-typescript",
-    "plugin:react/recommended",
-    "plugin:cypress/recommended"
-  ],
-  "env": {
-    "cypress/globals": true
-  },
-  "plugins": ["react", "cypress"],
+  "extends": ["standard-with-typescript", "plugin:react/recommended"],
+
+  "plugins": ["react"],
   "parserOptions": {
-    "project": "./tsconfig-eslint.json"
+    "project": "./tsconfig.json"
   },
   "rules": {
     "@typescript-eslint/consistent-type-definitions": "off",
@@ -23,6 +17,8 @@
     "@typescript-eslint/comma-spacing": "off",
     "@typescript-eslint/return-await": "off",
     "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/quotes": ["double"],
+    "quotes": "off",
     "no-redeclare": "off",
     "import/export": "off",
     "react/jsx-uses-react": "error",
