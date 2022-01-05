@@ -1,0 +1,6 @@
+{
+  "baseUrl": "http://localhost:8080",
+  "pluginsFile": false,
+  "supportFile": "cypress/support",
+  "fixturesFolder": false
+}
