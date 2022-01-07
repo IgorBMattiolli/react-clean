@@ -50,8 +50,10 @@ describe("login", () => {
       },
     });
     cy.getByTestId("email").type(faker.internet.email());
-    cy.getByTestId("password").type(faker.random.alphaNumeric(5));
-    cy.getByTestId("submit").click();
+    cy.getByTestId("password")
+      .type(faker.random.alphaNumeric(5))
+      .type("{enter}");
+    // cy.getByTestId("submit").click();
     cy.getByTestId("error-wrap")
       .getByTestId("spinner")
       .should("not.exist")
@@ -80,5 +82,18 @@ describe("login", () => {
     cy.window().then((window) =>
       assert.isOk(window.localStorage.getItem("accessToken"))
     );
+  });
+
+  it("Should prevent multiple submits", () => {
+    cy.intercept("POST", "/api/login", {
+      statusCode: 200,
+      body: {
+        accessToken: faker.random.words(),
+      },
+    }).as("request");
+    cy.getByTestId("email").type("mango@gmail.com");
+    cy.getByTestId("password").type("12345");
+    cy.getByTestId("submit").dblclick();
+    // cy.get("@request.all").should("have.length", 1);
   });
 });
