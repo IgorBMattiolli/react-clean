@@ -1,5 +1,5 @@
 import { HttpGetClient, HTTP_STATUS_CODE } from "@/data/protocols/http";
-import { UnexpedctedError } from "@/domain/errors";
+import { UnexpectedError } from "@/domain/errors";
 import { SurveyModel } from "@/domain/models";
 import { LoadSurveyList } from "@/domain/useCases/load-survey-list";
 
@@ -17,7 +17,7 @@ export class RemoteLoadSurveyList implements LoadSurveyList {
       case HTTP_STATUS_CODE.NO_CONTENT:
         return [];
       default:
-        throw new UnexpedctedError();
+        throw new UnexpectedError();
     }
   }
 }

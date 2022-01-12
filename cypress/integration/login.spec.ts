@@ -6,40 +6,40 @@ describe("login", () => {
     cy.visit("login");
   });
   it("Should load with correct initial state", () => {
-    cy.getByTestId("email-status")
+    cy.get(`[data-testid=email-status]`)
       .should("have.attr", "title", "Campo obrigatório")
       .should("contain.text", "🔴");
-    cy.getByTestId("password-status")
+    cy.get(`[data-testid=password-status]`)
       .should("have.attr", "title", "Campo obrigatório")
       .should("contain.text", "🔴");
-    cy.getByTestId("submit").should("have.attr", "disabled");
-    cy.getByTestId("error-wrap").should("not.have.descendants");
+    cy.get(`[data-testid=submit]`).should("have.attr", "disabled");
+    cy.get(`[data-testid=error-wrap]`).should("not.have.descendants");
   });
 
   it("Should present error state if form is invalid", () => {
-    cy.getByTestId("email").type(faker.random.word());
-    cy.getByTestId("email-status")
+    cy.get(`[data-testid=email]`).type(faker.random.word());
+    cy.get(`[data-testid=email-status]`)
       .should("have.attr", "title", "Valor inválido")
       .should("contain.text", "🔴");
-    cy.getByTestId("password").type(faker.random.alphaNumeric(3));
-    cy.getByTestId("password-status")
+    cy.get(`[data-testid=password]`).type(faker.random.alphaNumeric(3));
+    cy.get(`[data-testid=password-status]`)
       .should("have.attr", "title", "Valor inválido")
       .should("contain.text", "🔴");
-    cy.getByTestId("submit").should("have.attr", "disabled");
-    cy.getByTestId("error-wrap").should("not.have.descendants");
+    cy.get(`[data-testid=submit]`).should("have.attr", "disabled");
+    cy.get(`[data-testid=error-wrap]`).should("not.have.descendants");
   });
 
   it("Should present error state if form is invalid", () => {
-    cy.getByTestId("email").type(faker.internet.email());
-    cy.getByTestId("email-status")
+    cy.get(`[data-testid=email]`).type(faker.internet.email());
+    cy.get(`[data-testid=email-status]`)
       .should("have.attr", "title", "Tudo certo!")
       .should("contain.text", "🟢");
-    cy.getByTestId("password").type(faker.random.alphaNumeric(5));
-    cy.getByTestId("password-status")
+    cy.get(`[data-testid=password]`).type(faker.random.alphaNumeric(5));
+    cy.get(`[data-testid=password-status]`)
       .should("have.attr", "title", "Tudo certo!")
       .should("contain.text", "🟢");
-    cy.getByTestId("submit").should("not.have.attr", "disabled");
-    cy.getByTestId("error-wrap").should("not.have.descendants");
+    cy.get(`[data-testid=submit]`).should("not.have.attr", "disabled");
+    cy.get(`[data-testid=error-wrap]`).should("not.have.descendants");
   });
 
   it("Should present error if invalid credentials are provided", () => {
@@ -49,15 +49,15 @@ describe("login", () => {
         error: faker.random.words(),
       },
     });
-    cy.getByTestId("email").type(faker.internet.email());
-    cy.getByTestId("password")
+    cy.get(`[data-testid=email`).type(faker.internet.email());
+    cy.get(`[data-testid=password`)
       .type(faker.random.alphaNumeric(5))
       .type("{enter}");
-    // cy.getByTestId("submit").click();
-    cy.getByTestId("error-wrap")
-      .getByTestId("spinner")
+    // cy.get(`[data-testid=submit").click();
+    cy.get(`[data-testid=error-wrap]`)
+      .get(`[data-testid=spinner]`)
       .should("not.exist")
-      .getByTestId("main-error")
+      .get(`[data-testid=main-error]`)
       .should("exist")
       .should("contain.text", "Credenciais inválidas");
     cy.url().should("eq", `${baseUrl}/login`);
@@ -70,17 +70,12 @@ describe("login", () => {
         accessToken: faker.random.words(),
       },
     });
-    cy.getByTestId("email").type("mango@gmail.com");
-    cy.getByTestId("password").type("12345");
-    cy.getByTestId("submit").click();
-    cy.getByTestId("error-wrap")
-      .getByTestId("spinner")
-      .should("not.exist")
-      .getByTestId("main-error")
-      .should("not.exist");
+    cy.get(`[data-testid=email]`).type("mango@gmail.com");
+    cy.get(`[data-testid=password]`).type("12345");
+    cy.get(`[data-testid=submit]`).click();
     cy.url().should("eq", `${baseUrl}/`);
     cy.window().then((window) =>
-      assert.isOk(window.localStorage.getItem("accessToken"))
+      assert.isOk(window.localStorage.getItem("account"))
     );
   });
 
@@ -91,9 +86,9 @@ describe("login", () => {
         accessToken: faker.random.words(),
       },
     }).as("request");
-    cy.getByTestId("email").type("mango@gmail.com");
-    cy.getByTestId("password").type("12345");
-    cy.getByTestId("submit").dblclick();
+    cy.get(`[data-testid=email]`).type("mango@gmail.com");
+    cy.get(`[data-testid=password]`).type("12345");
+    cy.get(`[data-testid=submit]`).dblclick();
     // cy.get("@request.all").should("have.length", 1);
   });
 });

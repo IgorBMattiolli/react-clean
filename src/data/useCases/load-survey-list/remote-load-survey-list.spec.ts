@@ -1,6 +1,6 @@
 import { HTTP_STATUS_CODE } from "@/data/protocols/http";
 import { HttpGetClientSpy } from "@/data/test";
-import { UnexpedctedError } from "@/domain/errors";
+import { UnexpectedError } from "@/domain/errors";
 import { SurveyModel } from "@/domain/models";
 import { mockSurveyListModel } from "@/domain/test";
 import faker from "faker";
@@ -33,7 +33,7 @@ describe("RemoteLoadSurveyList", () => {
     httpGetClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.FORBIDDEN,
     };
-    await expect(sut.loadAll()).rejects.toBeInstanceOf(UnexpedctedError);
+    await expect(sut.loadAll()).rejects.toBeInstanceOf(UnexpectedError);
   });
 
   test("Should throw UnexpectedError if HttpGetClient returns 404", async () => {
@@ -41,7 +41,7 @@ describe("RemoteLoadSurveyList", () => {
     httpGetClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.NOT_FOUND,
     };
-    await expect(sut.loadAll()).rejects.toBeInstanceOf(UnexpedctedError);
+    await expect(sut.loadAll()).rejects.toBeInstanceOf(UnexpectedError);
   });
 
   test("Should throw UnexpectedError if HttpGetClient returns 500", async () => {
@@ -49,7 +49,7 @@ describe("RemoteLoadSurveyList", () => {
     httpGetClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.SERVER_ERROR,
     };
-    await expect(sut.loadAll()).rejects.toBeInstanceOf(UnexpedctedError);
+    await expect(sut.loadAll()).rejects.toBeInstanceOf(UnexpectedError);
   });
 
   test("Should return a empty list if HttpGetClient returns 204", async () => {

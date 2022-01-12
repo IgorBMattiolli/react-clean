@@ -1,5 +1,5 @@
 import { HttpPostClient, HTTP_STATUS_CODE } from "@/data/protocols/http";
-import { UnexpedctedError } from "@/domain/errors";
+import { UnexpectedError } from "@/domain/errors";
 import { EmailInUseError } from "@/domain/errors/email-in-use-error";
 import { AccountModel } from "@/domain/models";
 import { AddAccount, AddAccountParams } from "@/domain/useCases/add-account";
@@ -21,7 +21,7 @@ export class RemoteAddAccount implements AddAccount {
       case HTTP_STATUS_CODE.FORBIDDEN:
         throw new EmailInUseError();
       default:
-        throw new UnexpedctedError();
+        throw new UnexpectedError();
     }
   }
 }

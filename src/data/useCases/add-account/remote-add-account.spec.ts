@@ -1,6 +1,6 @@
 import { HTTP_STATUS_CODE } from "@/data/protocols/http";
 import { HttpPostClientSpy } from "@/data/test";
-import { UnexpedctedError } from "@/domain/errors";
+import { UnexpectedError } from "@/domain/errors";
 import { EmailInUseError } from "@/domain/errors/email-in-use-error";
 import { AccountModel } from "@/domain/models";
 import { mockAccountModel, mockAddAccount } from "@/domain/test";
@@ -47,33 +47,33 @@ describe("RemoteAddAccount", () => {
     );
   });
 
-  test("Should throw UnexpedctedError if HttpPostClient return 400", async () => {
+  test("Should throw UnexpectedError if HttpPostClient return 400", async () => {
     const { sut, httpPostClientSpy } = makeSut();
     httpPostClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.BAD_REQUEST,
     };
     await expect(sut.add(mockAddAccount())).rejects.toBeInstanceOf(
-      UnexpedctedError
+      UnexpectedError
     );
   });
 
-  test("Should throw UnexpedctedError if HttpPostClient return 500", async () => {
+  test("Should throw UnexpectedError if HttpPostClient return 500", async () => {
     const { sut, httpPostClientSpy } = makeSut();
     httpPostClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.SERVER_ERROR,
     };
     await expect(sut.add(mockAddAccount())).rejects.toBeInstanceOf(
-      UnexpedctedError
+      UnexpectedError
     );
   });
 
-  test("Should throw UnexpedctedError if HttpPostClient return 404", async () => {
+  test("Should throw UnexpectedError if HttpPostClient return 404", async () => {
     const { sut, httpPostClientSpy } = makeSut();
     httpPostClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.NOT_FOUND,
     };
     await expect(sut.add(mockAddAccount())).rejects.toBeInstanceOf(
-      UnexpedctedError
+      UnexpectedError
     );
   });
 

@@ -1,6 +1,6 @@
 import { RemoteAuthentication } from "./remote-authentication";
 import { HttpPostClientSpy } from "@/data/test";
-import { InvalidCredentialsError, UnexpedctedError } from "@/domain/errors";
+import { InvalidCredentialsError, UnexpectedError } from "@/domain/errors";
 import { HTTP_STATUS_CODE } from "@/data/protocols/http";
 import { AccountModel } from "@/domain/models";
 import { AuthenticationParams } from "@/domain/useCases";
@@ -45,33 +45,33 @@ describe("RemoteAuthentication", () => {
     );
   });
 
-  test("Should throw UnexpedctedError if HttpPostClient return 400", async () => {
+  test("Should throw UnexpectedError if HttpPostClient return 400", async () => {
     const { sut, httpPostClientSpy } = makeSut();
     httpPostClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.BAD_REQUEST,
     };
     await expect(sut.auth(mockAuthentication())).rejects.toBeInstanceOf(
-      UnexpedctedError
+      UnexpectedError
     );
   });
 
-  test("Should throw UnexpedctedError if HttpPostClient return 500", async () => {
+  test("Should throw UnexpectedError if HttpPostClient return 500", async () => {
     const { sut, httpPostClientSpy } = makeSut();
     httpPostClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.SERVER_ERROR,
     };
     await expect(sut.auth(mockAuthentication())).rejects.toBeInstanceOf(
-      UnexpedctedError
+      UnexpectedError
     );
   });
 
-  test("Should throw UnexpedctedError if HttpPostClient return 404", async () => {
+  test("Should throw UnexpectedError if HttpPostClient return 404", async () => {
     const { sut, httpPostClientSpy } = makeSut();
     httpPostClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.NOT_FOUND,
     };
     await expect(sut.auth(mockAuthentication())).rejects.toBeInstanceOf(
-      UnexpedctedError
+      UnexpectedError
     );
   });
 
