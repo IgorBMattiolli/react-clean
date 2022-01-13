@@ -1,28 +1,28 @@
 import Styles from "./survey-list-styles.scss";
-import React from "react";
-import { Footer, Header, Icon, Logo } from "@/presentation/components";
-import { IconName } from "@/presentation/components/icon/icon";
+import React, { useEffect } from "react";
+import { Footer, Header } from "@/presentation/components";
+import { SurveyItemEmpty, SurveyItem } from "./components";
+import { LoadSurveyList } from "@/domain/useCases";
 
-const SurveyList: React.FC = () => {
+type Props = {
+  loadSurveyList: LoadSurveyList;
+};
+
+const SurveyList: React.FC<Props> = ({ loadSurveyList }: Props) => {
+  useEffect(() => {
+    (async function () {
+      loadSurveyList.loadAll();
+    })();
+  }, []);
+
   return (
     <div className={Styles.surveyListWrap}>
       <Header />
       <div className={Styles.contentWrap}>
         <h2>Enquetes</h2>
-        <ul>
-          <li>
-            <div className={Styles.surveyContent}>
-              <Icon className={Styles.iconWrap} iconName={IconName.thumbDown} />
-              <time>
-                <span className={Styles.day}>22</span>
-                <span className={Styles.month}>03</span>
-                <span className={Styles.year}>2022</span>
-              </time>
-              <p>Qual é o seu framework favorito?</p>
-            </div>
-            <footer>Ver Resultado</footer>
-          </li>
-          <li></li>
+        <ul data-testid="survey-list">
+          <SurveyItem />
+          <SurveyItemEmpty />
         </ul>
       </div>
       <Footer />

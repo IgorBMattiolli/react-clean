@@ -6,3 +6,5 @@ export { default as Header } from "./header/header";
 export { default as Logo } from "./logo/logo";
 export { default as Spinner } from "./spinner/spinner";
 export { default as Icon } from "./icon/icon";
+export { default as SubmitButton } from "./submit-button/submit-button";
+export { default as PrivateRoute } from "./private-route/private-route";

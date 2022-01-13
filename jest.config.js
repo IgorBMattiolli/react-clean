@@ -11,6 +11,7 @@ module.exports = {
     "<rootDir>/node_modules/",
     "<rootDir>/src/main/tets/cypress",
   ],
+  setupFilesAfterEnv: ["<rootDir>/src/main/config/jest-setup.ts"],
   testEnvironment: "jsdom",
   transform: {
     ".+\\.(ts|tsx)$": "ts-jest",
