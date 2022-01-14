@@ -21,7 +21,6 @@ const SurveyList: React.FC<Props> = ({ loadSurveyList }: Props) => {
       <div className={Styles.contentWrap}>
         <h2>Enquetes</h2>
         <ul data-testid="survey-list">
-          <SurveyItem />
           <SurveyItemEmpty />
         </ul>
       </div>
