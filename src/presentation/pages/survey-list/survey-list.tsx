@@ -1,28 +1,37 @@
 import Styles from "./survey-list-styles.scss";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Footer, Header } from "@/presentation/components";
-import { SurveyItemEmpty, SurveyItem } from "./components";
+import { Error, SurveyContext, SurveyListItem } from "./components";
 import { LoadSurveyList } from "@/domain/useCases";
+import { SurveyModel } from "@/domain/models";
 
 type Props = {
   loadSurveyList: LoadSurveyList;
 };
 
 const SurveyList: React.FC<Props> = ({ loadSurveyList }: Props) => {
+  const [state, setState] = useState({
+    surveys: [] as SurveyModel[],
+    error: "",
+    reload: false,
+  });
   useEffect(() => {
-    (async function () {
-      loadSurveyList.loadAll();
-    })();
-  }, []);
+    loadSurveyList
+      .loadAll()
+      .then((surveys) => {
+        setState({ ...state, surveys });
+      })
+      .catch((error) => setState({ ...state, error: error.message }));
+  }, [state.reload]);
 
   return (
     <div className={Styles.surveyListWrap}>
       <Header />
       <div className={Styles.contentWrap}>
         <h2>Enquetes</h2>
-        <ul data-testid="survey-list">
-          <SurveyItemEmpty />
-        </ul>
+        <SurveyContext.Provider value={{ state, setState }}>
+          {state.error ? <Error /> : <SurveyListItem />}
+        </SurveyContext.Provider>
       </div>
       <Footer />
     </div>

@@ -1,6 +1,6 @@
 import { Icon } from "@/presentation/components";
 import React from "react";
-import Styles from "./survey-item-styles.scss";
+import Styles from "./item-styles.scss";
 import { IconName } from "@/presentation/components/icon/icon";
 import { SurveyModel } from "@/domain/models";
 
@@ -11,7 +11,7 @@ type Props = {
 const SurveyItem: React.FC<Props> = ({ survey }: Props) => {
   const iconName = survey.didAnswer ? IconName.thumbUp : IconName.thumbDown;
   return (
-    <li className={Styles.surveyItem}>
+    <li className={Styles.surveyItemWrap}>
       <div className={Styles.surveyContent}>
         <Icon className={Styles.iconWrap} iconName={iconName} />
         <time>

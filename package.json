@@ -12,7 +12,8 @@
     "test:coveralls": "npm run test:ci && coveralls < coverage/lcov.info",
     "test:cypress": "cypress open",
     "test:cypress:ci": "start-server-and-test dev:base http-get://localhost:8080 test:cypress:run",
-    "check": "npm-check -u -s"
+    "check": "npm-check -u -s",
+    "clear:jest": "jest --clearCache"
   },
   "keywords": [],
   "author": "",
