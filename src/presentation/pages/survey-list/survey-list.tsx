@@ -3,15 +3,18 @@ import React, { useEffect, useState } from "react";
 import { Footer, Header } from "@/presentation/components";
 import { Error, SurveyContext, SurveyListItem } from "./components";
 import { LoadSurveyList } from "@/domain/useCases";
-import { SurveyModel } from "@/domain/models";
+import { useErrorHandler } from "@/presentation/hooks";
 
 type Props = {
   loadSurveyList: LoadSurveyList;
 };
 
 const SurveyList: React.FC<Props> = ({ loadSurveyList }: Props) => {
+  const handleError = useErrorHandler((error: Error) => {
+    setState({ ...state, error: error.message });
+  });
   const [state, setState] = useState({
-    surveys: [] as SurveyModel[],
+    surveys: [] as LoadSurveyList.Model[],
     error: "",
     reload: false,
   });
@@ -21,7 +24,7 @@ const SurveyList: React.FC<Props> = ({ loadSurveyList }: Props) => {
       .then((surveys) => {
         setState({ ...state, surveys });
       })
-      .catch((error) => setState({ ...state, error: error.message }));
+      .catch(handleError);
   }, [state.reload]);
 
   return (

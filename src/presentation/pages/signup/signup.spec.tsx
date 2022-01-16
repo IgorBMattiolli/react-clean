@@ -7,12 +7,12 @@ import SignUp from "./signup";
 import { Helper, ValidationStub } from "@/presentation/test";
 import { AddAccountSpy } from "@/presentation/test/mock-add-account";
 import { InvalidCredentialsError } from "@/domain/errors";
-import { AccountModel } from "@/domain/models";
 import { ApiContext } from "@/presentation/contexts";
+import { AddAccount } from "@/domain/useCases";
 
 type SutTypes = {
   addAccountSpy: AddAccountSpy;
-  setCurrentAccountMock(account: AccountModel): void;
+  setCurrentAccountMock(account: AddAccount.Model): void;
 };
 
 type SutParams = {

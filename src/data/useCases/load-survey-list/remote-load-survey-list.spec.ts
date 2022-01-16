@@ -1,18 +1,17 @@
+import { AccessDeniedError } from "./../../../domain/errors/access-denied-error";
 import { HTTP_STATUS_CODE } from "@/data/protocols/http";
-import { HttpGetClientSpy } from "@/data/test";
+import { HttpGetClientSpy, mockRemoteSurveyListModel } from "@/data/test";
 import { UnexpectedError } from "@/domain/errors";
-import { SurveyModel } from "@/domain/models";
-import { mockSurveyListModel } from "@/domain/test";
 import faker from "faker";
 import { RemoteLoadSurveyList } from "./remote-load-survey-list";
 
 type SutTypes = {
   sut: RemoteLoadSurveyList;
-  httpGetClientSpy: HttpGetClientSpy<SurveyModel[]>;
+  httpGetClientSpy: HttpGetClientSpy<RemoteLoadSurveyList.Model[]>;
 };
 
 const makeSut = (url = faker.internet.url()): SutTypes => {
-  const httpGetClientSpy = new HttpGetClientSpy<SurveyModel[]>();
+  const httpGetClientSpy = new HttpGetClientSpy<RemoteLoadSurveyList.Model[]>();
   const sut = new RemoteLoadSurveyList(url, httpGetClientSpy);
   return {
     httpGetClientSpy,
@@ -28,12 +27,12 @@ describe("RemoteLoadSurveyList", () => {
     expect(httpGetClientSpy.url).toBe(url);
   });
 
-  test("Should throw UnexpectedError if HttpGetClient returns 403", async () => {
+  test("Should throw AccessDeniedError if HttpGetClient returns 403", async () => {
     const { httpGetClientSpy, sut } = makeSut();
     httpGetClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.FORBIDDEN,
     };
-    await expect(sut.loadAll()).rejects.toBeInstanceOf(UnexpectedError);
+    await expect(sut.loadAll()).rejects.toBeInstanceOf(AccessDeniedError);
   });
 
   test("Should throw UnexpectedError if HttpGetClient returns 404", async () => {
@@ -54,7 +53,6 @@ describe("RemoteLoadSurveyList", () => {
 
   test("Should return a empty list if HttpGetClient returns 204", async () => {
     const { httpGetClientSpy, sut } = makeSut();
-    const httpResult = mockSurveyListModel();
     httpGetClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.NO_CONTENT,
     };
@@ -64,12 +62,31 @@ describe("RemoteLoadSurveyList", () => {
 
   test("Should return a list of SurveyModels if HttpGetClient returns 200", async () => {
     const { httpGetClientSpy, sut } = makeSut();
-    const httpResult = mockSurveyListModel();
+    const httpResult = mockRemoteSurveyListModel();
     httpGetClientSpy.response = {
       statusCode: HTTP_STATUS_CODE.OK,
       body: httpResult,
     };
     const surveyList = await sut.loadAll();
-    expect(surveyList).toEqual(httpResult);
+    expect(surveyList).toEqual([
+      {
+        id: httpResult[0].id,
+        question: httpResult[0].question,
+        date: new Date(httpResult[0].date),
+        didAnswer: httpResult[0].didAnswer,
+      },
+      {
+        id: httpResult[1].id,
+        question: httpResult[1].question,
+        date: new Date(httpResult[1].date),
+        didAnswer: httpResult[1].didAnswer,
+      },
+      {
+        id: httpResult[2].id,
+        question: httpResult[2].question,
+        date: new Date(httpResult[2].date),
+        didAnswer: httpResult[2].didAnswer,
+      },
+    ]);
   });
 });
