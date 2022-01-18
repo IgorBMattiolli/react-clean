@@ -3,7 +3,7 @@ node_js:
   - 14
 script:
   - npm run test:coveralls
-build:
+deploy:
   provider: heroku
   api_key: $HEROKU_API
   app: fordevs-09
