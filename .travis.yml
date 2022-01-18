@@ -3,4 +3,8 @@ node_js:
   - 14
 script:
   - npm run test:coveralls
-  - npm run test:cypress:ci
+build:
+  provider: heroku
+  api_key: $HEROKU_API
+  app: fordevs-09
+  skip_cleanup: true
