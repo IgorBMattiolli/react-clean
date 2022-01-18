@@ -8,3 +8,4 @@ deploy:
   api_key: $HEROKU_API
   app: fordevs-09
   skip_cleanup: true
+  branch: main
