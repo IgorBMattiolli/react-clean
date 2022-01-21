@@ -10,21 +10,12 @@ import { Validation } from "@/presentation/protocols/validation";
 
 export const makeSignupValidation = (): Validation => {
   return ValidationComposite.build([
-    new RequiredFieldValidation("name"),
-    new MinLengthValidation("name", 5),
-    new RequiredFieldValidation("email"),
-    new EmailValidation("email"),
-    new RequiredFieldValidation("password"),
-    new MinLengthValidation("password", 5),
-    new RequiredFieldValidation("passwordConfirmation"),
-    new CompareFieldsValidation("passwordConfirmation", "password"),
+    ...ValidationBuilder.field("name").minLength(5).required().build(),
+    ...ValidationBuilder.field("email").required().email().build(),
+    ...ValidationBuilder.field("password").required().minLength(5).build(),
+    ...ValidationBuilder.field("passwordConfirmation")
+      .required()
+      .sameAs("password")
+      .build(),
   ]);
 };
-
-// ...ValidationBuilder.field("name").minLength(5).required().build(),
-// ...ValidationBuilder.field("email").required().email().build(),
-// ...ValidationBuilder.field("password").required().minLength(5).build(),
-// ...ValidationBuilder.field("passwordConfirmation")
-//   .required()
-//   .sameAs("password")
-//   .build(),
